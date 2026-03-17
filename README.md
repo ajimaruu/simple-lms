@@ -123,8 +123,8 @@ simple-lms/
 
 ## Author
 
-Nama: <Aji Bayu Seno>
+Nama: Aji Bayu Seno
 
-NIM: <A11.2023.14885>
+NIM: A11.2023.14885
 
 Project: Simple LMS
