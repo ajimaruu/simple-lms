@@ -138,7 +138,7 @@ docker-compose exec web python manage.py demo_query
 
 ## Screenshot
 ![Django Welcome Page](docs/screenshot.png)
-![Query Demo](docs/query_demp.png)
+![Query Demo](docs/query_demo.png)
 
 ---
 
