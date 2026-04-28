@@ -7,6 +7,7 @@ class User(AbstractUser):
         ('instructor', 'Instructor'),
         ('student', 'Student'),
     )
+    # Cukup satu class User, max_length 20 sudah aman
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
 
 class Category(models.Model):
@@ -26,8 +27,10 @@ class EnrollmentQuerySet(models.QuerySet):
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    description = models.TextField(blank=True, null=True) # Ditambahkan agar sesuai kebutuhan LMS
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     instructor = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'instructor'}, related_name='courses_taught')
+    created_at = models.DateTimeField(auto_now_add=True) # Ditambahkan untuk tracking waktu
     
     objects = CourseQuerySet.as_manager()
 
@@ -46,9 +49,10 @@ class Lesson(models.Model):
         return self.title
 
 class Enrollment(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'student'})
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'student'}, related_name='enrollments')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolled_students')
     enrolled_at = models.DateTimeField(auto_now_add=True)
+    is_completed = models.BooleanField(default=False) # Digabung dari model bawah
     
     objects = EnrollmentQuerySet.as_manager()
 

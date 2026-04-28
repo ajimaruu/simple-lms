@@ -1,2 +1,7 @@
-Django>=4.2,<5.0
-psycopg2-binary>=2.9
+Django>=5.1,<5.2
+psycopg2-binary>=2.9,<3.0
+Pillow>=10.0,<11.0
+django-silk==5.0.3
+django-ninja
+pydantic[email]
+PyJWT

@@ -1,8 +1,21 @@
 # Simple LMS (Django + Docker + PostgreSQL)
 
-Simple LMS adalah project backend berbasis Django yang dijalankan menggunakan Docker dan PostgreSQL sebagai database.
-
+imple LMS adalah backend API untuk sistem manajemen pembelajaran yang dibangun dengan Django Ninja. Proyek ini menggunakan arsitektur modern berbasis token (JWT) dan kontrol akses berbasis peran (RBAC), dijalankan sepenuhnya menggunakan Docker.
 ---
+
+## Fitur Utama
+
+REST API dengan Django Ninja: Framework API yang cepat dan efisien dengan validasi Pydantic.
+
+JWT Authentication: Keamanan akses menggunakan JSON Web Token (Login & Register).
+
+Role-Based Access Control (RBAC): Pembatasan fitur untuk Admin, Instructor, dan Student menggunakan custom decorators.
+
+Database PostgreSQL: Penyimpanan data relasional yang persisten dan tangguh.
+
+Query Optimization: Mengatasi masalah N+1 Query menggunakan select_related dan prefetch_related.
+
+Interactive Documentation: Swagger UI otomatis tersedia untuk pengujian API secara langsung.
 
 ##  Cara Menjalankan Project
 
@@ -40,7 +53,11 @@ docker-compose up -d --build
 ### 4. Jalankan Migrasi Database
 
 ```bash
+# Migrasi tabel
 docker-compose exec web python manage.py migrate
+
+# Load data awal (Admin, Instructor, Student, & Courses)
+docker-compose exec web python manage.py loaddata courses/fixtures/initial_data.json
 ```
 
 ---
@@ -54,6 +71,18 @@ http://localhost:8000
 ```
 
 ---
+
+### Dokumentasi API (Swagger)
+Setelah container berjalan, Anda dapat mengakses dokumentasi interaktif di:
+👉 http://localhost:8000/api/docs
+
+Endpoint Utama:
+
+Authentication: /api/auth/register, /api/auth/login, /api/auth/me.
+
+Courses: /api/courses (Public), /api/courses (Instructor/Admin Only).
+
+Enrollments: /api/enrollments, /api/enrollments/my-courses, /api/enrollments/{id}/progress.
 
 ## Environment Variables
 
@@ -139,6 +168,8 @@ docker-compose exec web python manage.py demo_query
 ## Screenshot
 ![Django Welcome Page](docs/screenshot.png)
 ![Query Demo](docs/query_demo.png)
+![Lms](docs/sc.png)
+
 
 ---
 
@@ -146,27 +177,18 @@ docker-compose exec web python manage.py demo_query
 
 ```
 simple-lms/
-├── courses/              
-│   │   └── initial_data.json
-│   ├── management/
-│   │   └── commands/
-│   │       └── demo_query.py
-│   ├── admin.py
-│   └── models.py
-├── config/              
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── docs/                 
-│   ├── screenshot.png
-│   └── query_demo.png
+├── courses/              
+│   ├── fixtures/          # Data dummy JSON
+│   ├── management/        # Custom django commands
+│   ├── api.py             # Routing Django Ninja
+│   ├── auth.py            # Logic JWT Authentication
+│   ├── permissions.py     # Decorators RBAC
+│   ├── schemas.py         # Pydantic Validation
+│   └── models.py          # Database Schema
+├── config/                # Django settings & URL config
+├── docs/                  # Screenshots & Dokumentasi
 ├── docker-compose.yml
-├── Dockerfile
-├── .env
-├── .env.example
-├── requirements.txt
-├── manage.py
-└── README.md
+└── Dockerfile
 ```
 
 ---
